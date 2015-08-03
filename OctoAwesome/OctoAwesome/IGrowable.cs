@@ -13,17 +13,17 @@ namespace OctoAwesome
         /// </summary>
         /// <param name="manipulator"></param>
         /// <param name="planetId"></param>
-        /// <param name="index3"></param>
+        /// <param name="position"></param>
         /// <returns></returns>
-        bool CanGrow(IWorldManipulator manipulator, int planetId, Index3 index3);
+        bool CanGrow(IWorldManipulator manipulator, int planetId, Index3 position);
 
         /// <summary>
         /// Fordert den Block auf zu wachsen.
         /// </summary>
         /// <param name="manipulator"></param>
         /// <param name="planetId"></param>
-        /// <param name="index3"></param>
+        /// <param name="position"></param>
         /// <returns></returns>
-        bool TryGrow(IWorldManipulator manipulator, int planetId, Index3 index3);
+        bool TryGrow(IWorldManipulator manipulator, int planetId, Index3 position);
     }
 }
