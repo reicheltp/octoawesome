@@ -41,7 +41,7 @@ namespace OctoAwesome.Basics.Generators
                 manipulator.SetBlock(planetId, trunkPosition, _trunk.GetInstance(OrientationFlags.SideTop));
             }
 
-            var treetopGenerator = new SphereGenerator((int) (treeHeight / 4.0 + 0.75), _leave, true);
+            var treetopGenerator = new SphereGenerator(treeHeight / 2.0 - 0.5, _leave, true);
 
             treetopGenerator.TryGenerate(manipulator, planetId,
                 new Index3(startPosition.X, startPosition.Y, startPosition.Z + treeHeight - 1));
