@@ -16,6 +16,8 @@ namespace OctoAwesome.Runtime
         private IMapGenerator mapGenerator = null;
         private IChunkPersistence chunkPersistence = null;
 
+        public Random Random { get; private set; }
+
         /// <summary>
         /// Planet Cache.
         /// </summary>
@@ -52,6 +54,8 @@ namespace OctoAwesome.Runtime
         {
             mapGenerator = MapGeneratorManager.GetMapGenerators().First();
             chunkPersistence = new ChunkDiskPersistence();
+
+            Random = new Random();
 
             planetCache = new Cache<int, IPlanet>(1, loadPlanet, savePlanet);
             chunkCache = new Cache<PlanetIndex3, IChunk>(CacheSize, loadChunk, saveChunk);

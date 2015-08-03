@@ -1,3 +1,6 @@
+using System;
+using System.Security.Cryptography.X509Certificates;
+
 namespace OctoAwesome
 {
     /// <summary>
@@ -5,6 +8,7 @@ namespace OctoAwesome
     /// </summary>
     public interface IWorldManipulator
     {
+        Random Random { get; }
         IUniverse GetUniverse(int id);
         IPlanet GetPlanet(int id);
 
