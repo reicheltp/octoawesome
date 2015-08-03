@@ -15,5 +15,23 @@ namespace OctoAwesome
         float? Intersect(Index3 boxPosition, Ray ray, out Axis? collisionAxis);
 
         float? Intersect(Index3 boxPosition, BoundingBox position, Vector3 move, out Axis? collisionAxis);
+
+        /// <summary>
+        /// Wird aufgerufen, wenn der Block an der übergebenen Position plaziert werden soll.
+        /// </summary>
+        /// <param name="manipulator"></param>
+        /// <param name="planetId"></param>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        bool CanPlaceAt(IWorldManipulator manipulator, int planetId, Index3 pos);
+
+        /// <summary>
+        /// Wird aufgerufen, wenn der Block an der übergebenen Position plaziert werden soll.
+        /// </summary>
+        /// <param name="manipulator"></param>
+        /// <param name="planetId"></param>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        bool CanReplace(IWorldManipulator manipulator, int planetId, Index3 pos);
     }
 }

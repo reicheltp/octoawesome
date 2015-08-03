@@ -7,7 +7,7 @@ using System.Text;
 
 namespace OctoAwesome.Runtime
 {
-    public class ResourceManager
+    public class ResourceManager : IResourceManager
     {
         public static int CacheSize = 10000;
 
@@ -15,6 +15,8 @@ namespace OctoAwesome.Runtime
 
         private IMapGenerator mapGenerator = null;
         private IChunkPersistence chunkPersistence = null;
+
+        public Random Random { get; private set; }
 
         /// <summary>
         /// Planet Cache.
@@ -30,8 +32,8 @@ namespace OctoAwesome.Runtime
 
         #region Singleton
 
-        private static ResourceManager instance = null;
-        public static ResourceManager Instance
+        private static IResourceManager instance = null;
+        public static IResourceManager Instance
         {
             get
             {
@@ -52,6 +54,8 @@ namespace OctoAwesome.Runtime
         {
             mapGenerator = MapGeneratorManager.GetMapGenerators().First();
             chunkPersistence = new ChunkDiskPersistence();
+
+            Random = new Random();
 
             planetCache = new Cache<int, IPlanet>(1, loadPlanet, savePlanet);
             chunkCache = new Cache<PlanetIndex3, IChunk>(CacheSize, loadChunk, saveChunk);
@@ -132,6 +136,12 @@ namespace OctoAwesome.Runtime
             Coordinate coordinate = new Coordinate(0, index, Vector3.Zero);
             IChunk chunk = GetChunk(planetId, coordinate.ChunkIndex);
             chunk.SetBlock(coordinate.LocalBlockIndex, block);
+        }
+
+        public bool IsReplaceable(int planetId, Index3 pos)
+        {
+            var block = GetBlock(planetId, pos);
+            return block == null || block.CanReplace(this, planetId, pos);
         }
         
         private IPlanet loadPlanet(int index)

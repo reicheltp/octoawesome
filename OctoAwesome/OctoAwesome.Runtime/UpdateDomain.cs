@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -48,8 +49,8 @@ namespace OctoAwesome.Runtime
                     watch.Elapsed, frameTime); 
                 lastCall = watch.Elapsed;
 
-                foreach (var activeChunk in ActiveChunks)
-                    activeChunk.Update(gameTime);
+                foreach (var activeChunk in ActiveChunks.ToArray())
+                    activeChunk.Update(gameTime, ResourceManager.Instance);
 
                 foreach (var actorHost in ActorHosts)
                     actorHost.Update(gameTime);
