@@ -158,9 +158,9 @@ namespace OctoAwesome
             }
         }
 
-        public virtual bool CanPlaceAt(IWorldManipulator manipulator, int planetId, Index3 pos)
+        public virtual bool CanPlaceAt(IWorldManipulator manipulator, int planetId, Index3 position)
         {
-            return manipulator.IsReplaceable(planetId, pos);
+            return manipulator.IsReplaceable(planetId, position);
         }
 
         public virtual bool CanReplace(IWorldManipulator manipulator, int planetId, Index3 pos)

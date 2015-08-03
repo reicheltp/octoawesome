@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MonoGame.Framework, Version=3.3.0.2238, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\MonoGame.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -71,6 +75,8 @@
     </Compile>
     <Compile Include="SandBlock.cs" />
     <Compile Include="SandBlockDefinition.cs" />
+    <Compile Include="SaplingBlock.cs" />
+    <Compile Include="SaplingBlockDefinition.cs" />
     <Compile Include="StoneBlock.cs" />
     <Compile Include="StoneBlockDefinition.cs" />
     <Compile Include="WaterBlock.cs" />
@@ -126,6 +132,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\leaves.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sapling.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

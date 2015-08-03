@@ -21,9 +21,9 @@ namespace OctoAwesome
         /// </summary>
         /// <param name="manipulator"></param>
         /// <param name="planetId"></param>
-        /// <param name="pos"></param>
+        /// <param name="position"></param>
         /// <returns></returns>
-        bool CanPlaceAt(IWorldManipulator manipulator, int planetId, Index3 pos);
+        bool CanPlaceAt(IWorldManipulator manipulator, int planetId, Index3 position);
 
         /// <summary>
         /// Wird aufgerufen, wenn der Block an der übergebenen Position plaziert werden soll.

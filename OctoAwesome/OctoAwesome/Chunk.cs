@@ -31,6 +31,7 @@ namespace OctoAwesome
 
         protected IBlock[] blocks;
         private IList<Index3> _updateableBlockIndices;
+        private Index3 _offset;
 
         /// <summary>
         /// Chunk Index innerhalb des Planeten.
@@ -51,6 +52,7 @@ namespace OctoAwesome
             _updateableBlockIndices = new List<Index3>();
 
             Index = pos;
+            _offset = CHUNKSIZE*Index;
             Planet = planet;
             ChangeCounter = 0;
         }
@@ -152,11 +154,11 @@ namespace OctoAwesome
         /// <param name="manipulator"></param>
         public void Update(GameTime gameTime, IWorldManipulator manipulator)
         {
-            foreach (var index in _updateableBlockIndices)
+            foreach (var index in _updateableBlockIndices.ToArray())
             {
                 var block = blocks[GetFlatIndex(index)] as IUpdateable;
                 if(block != null)
-                    block.Update(gameTime, manipulator, Planet, index);
+                    block.Update(gameTime, manipulator, Planet, _offset + index);
             }
         }
 

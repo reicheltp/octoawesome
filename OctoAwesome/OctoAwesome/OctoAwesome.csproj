@@ -61,6 +61,7 @@
     <Compile Include="IChunk.cs" />
     <Compile Include="IChunkPersistence.cs" />
     <Compile Include="IClimateMap.cs" />
+    <Compile Include="IGrowable.cs" />
     <Compile Include="IInputSet.cs" />
     <Compile Include="IMapGenerator.cs" />
     <Compile Include="Index2.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="IUniverse.cs" />
     <Compile Include="IUpdateable.cs" />
     <Compile Include="IWorldManipulator.cs" />
+    <Compile Include="IWorldManipulatorExtensions.cs" />
     <Compile Include="Noise\INoise.cs" />
     <Compile Include="Noise\PerlinNoiseGenerator.cs" />
     <Compile Include="Noise\SimplexNoiseGenerator.cs" />
