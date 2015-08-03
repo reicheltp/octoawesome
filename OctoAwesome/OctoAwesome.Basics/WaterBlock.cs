@@ -1,13 +1,10 @@
-﻿using OctoAwesome.Basics.Properties;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-
-namespace OctoAwesome.Basics
+﻿namespace OctoAwesome.Basics
 {
     public sealed class WaterBlock : Block
     {
+        public override bool CanReplace(IWorldManipulator manipulator, int planetId, Index3 pos)
+        {
+            return true;
+        }
     }
 }

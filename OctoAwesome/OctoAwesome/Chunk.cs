@@ -30,7 +30,7 @@ namespace OctoAwesome
         public static readonly Index3 CHUNKSIZE = new Index3(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z);
 
         protected IBlock[] blocks;
-        private IList<int> _updateableBlockIndices;
+        private IList<Index3> _updateableBlockIndices;
 
         /// <summary>
         /// Chunk Index innerhalb des Planeten.
@@ -48,7 +48,7 @@ namespace OctoAwesome
         public Chunk(Index3 pos, int planet)
         {
             blocks = new IBlock[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-            _updateableBlockIndices = new List<int>();
+            _updateableBlockIndices = new List<Index3>();
 
             Index = pos;
             Planet = planet;
@@ -107,14 +107,15 @@ namespace OctoAwesome
                 return;
 
             var flatIndex = GetFlatIndex(x, y, z);
+            var index3 = new Index3(x, y, z);
 
-            if (_updateableBlockIndices.Contains(flatIndex))
-                _updateableBlockIndices.Remove(flatIndex);
+            if (_updateableBlockIndices.Contains(index3))
+                _updateableBlockIndices.Remove(index3);
 
             blocks[flatIndex] = block;
 
             if(block is IUpdateable)
-                _updateableBlockIndices.Add(flatIndex);
+                _updateableBlockIndices.Add(index3);
 
             ChangeCounter++;
         }
@@ -148,13 +149,14 @@ namespace OctoAwesome
         /// Reicht das Update an alle Blöcke weiter, welche geupdatet werden sollen
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Update(GameTime gameTime)
+        /// <param name="manipulator"></param>
+        public void Update(GameTime gameTime, IWorldManipulator manipulator)
         {
             foreach (var index in _updateableBlockIndices)
             {
-                var block = blocks[index] as IUpdateable;
+                var block = blocks[GetFlatIndex(index)] as IUpdateable;
                 if(block != null)
-                    block.Update(gameTime);
+                    block.Update(gameTime, manipulator, Planet, index);
             }
         }
 

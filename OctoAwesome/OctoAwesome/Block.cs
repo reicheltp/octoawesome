@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace OctoAwesome
@@ -155,6 +156,16 @@ namespace OctoAwesome
                 collisionAxis = null;
                 return null;
             }
+        }
+
+        public virtual bool CanPlaceAt(IWorldManipulator manipulator, int planetId, Index3 pos)
+        {
+            return manipulator.IsReplaceable(planetId, pos);
+        }
+
+        public virtual bool CanReplace(IWorldManipulator manipulator, int planetId, Index3 pos)
+        {
+            return false;
         }
     }
 }

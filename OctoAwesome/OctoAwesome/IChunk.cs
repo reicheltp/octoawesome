@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace OctoAwesome
 {
     /// <summary>
     /// Basis-Schnittstelle für alle Implementierungen eines Chunks.
     /// </summary>
-    public interface IChunk : IUpdateable
+    public interface IChunk
     {
         /// <summary>
         /// Referenz auf den Planeten.
@@ -70,5 +72,7 @@ namespace OctoAwesome
         /// <param name="stream">Input Stream</param>
         /// <param name="knownBlocks">Liste der bekannten Block-Typen</param>
         void Deserialize(Stream stream, IEnumerable<IBlockDefinition> knownBlocks);
+
+        void Update(GameTime gameTime, IWorldManipulator manipulator);
     }
 }

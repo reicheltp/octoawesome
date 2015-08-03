@@ -7,6 +7,6 @@ namespace OctoAwesome
     /// </summary>
     public interface IUpdateable
     {
-        void Update(GameTime gameTime);
+        void Update(GameTime gameTime, IWorldManipulator manipulator, int planetId, Index3 position);
     }
 }

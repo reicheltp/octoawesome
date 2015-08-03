@@ -6,7 +6,7 @@ using System.Text;
 
 namespace OctoAwesome.Runtime
 {
-    public class ActorHost : IPlayerController, IUpdateable
+    public class ActorHost : IPlayerController
     {
         private readonly float Gap = 0.00001f;
 
@@ -232,8 +232,12 @@ namespace OctoAwesome.Runtime
                         case OrientationFlags.SideTop: add = new Index3(0, 0, 1); break;
                     }
 
-                    ResourceManager.Instance.SetBlock(planet.Id,
-                        lastApply.Value + add, ActiveTool.GetInstance(lastOrientation));
+                    var block = ActiveTool.GetInstance(lastOrientation);
+                    var position = lastApply.Value + add;
+
+                    if (block.CanPlaceAt(ResourceManager.Instance, planet.Id, position))
+                        ResourceManager.Instance.SetBlock(planet.Id, position, block);
+
                     lastApply = null;
                 }
             }
