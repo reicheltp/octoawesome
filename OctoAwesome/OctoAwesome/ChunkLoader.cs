@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace OctoAwesome
 {
-    public class ChunkLoader : IChunkLoader
+    public class 
+        ChunkLoader : IChunkLoader
     {
         private Index3 _center;
         private readonly int _range;

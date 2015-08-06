@@ -30,8 +30,6 @@ namespace OctoAwesome
         public static readonly Index3 CHUNKSIZE = new Index3(CHUNKSIZE_X, CHUNKSIZE_Y, CHUNKSIZE_Z);
 
         protected IBlock[] blocks;
-        private IList<Index3> _updateableBlockIndices;
-        private Index3 _offset;
 
         /// <summary>
         /// Chunk Index innerhalb des Planeten.
@@ -49,10 +47,8 @@ namespace OctoAwesome
         public Chunk(Index3 pos, int planet)
         {
             blocks = new IBlock[CHUNKSIZE_X * CHUNKSIZE_Y * CHUNKSIZE_Z];
-            _updateableBlockIndices = new List<Index3>();
 
             Index = pos;
-            _offset = CHUNKSIZE*Index;
             Planet = planet;
             ChangeCounter = 0;
         }
@@ -76,11 +72,11 @@ namespace OctoAwesome
         /// <returns>Block oder null, falls es dort keinen Block gibt.</returns>
         public IBlock GetBlock(int x, int y, int z)
         {
-            if (x < 0 || x >= Chunk.CHUNKSIZE_X ||
-                y < 0 || y >= Chunk.CHUNKSIZE_Y ||
-                z < 0 || z >= Chunk.CHUNKSIZE_Z)
-                return null;
-
+         //            if (x < 0 || x >= Chunk.CHUNKSIZE_X ||
+//                y < 0 || y >= Chunk.CHUNKSIZE_Y ||
+//                z < 0 || z >= Chunk.CHUNKSIZE_Z)
+//                return null;
+//
             return blocks[GetFlatIndex(x, y, z)];
         }
 
@@ -108,16 +104,16 @@ namespace OctoAwesome
                 z < 0 || z >= Chunk.CHUNKSIZE_Z)
                 return;
 
-            var flatIndex = GetFlatIndex(x, y, z);
-            var index3 = new Index3(x, y, z);
+//            var flatIndex = GetFlatIndex(x, y, z);
+//            var index3 = new Index3(x, y, z);
+//
+//            if (_updateableBlockIndices.Contains(index3))
+//                _updateableBlockIndices.Remove(index3);
 
-            if (_updateableBlockIndices.Contains(index3))
-                _updateableBlockIndices.Remove(index3);
+            blocks[GetFlatIndex(x,y,z)] = block;
 
-            blocks[flatIndex] = block;
-
-            if(block is IUpdateable)
-                _updateableBlockIndices.Add(index3);
+//            if(block is IUpdateable)
+//                _updateableBlockIndices.Add(index3);
 
             ChangeCounter++;
         }
@@ -131,10 +127,12 @@ namespace OctoAwesome
         /// <returns>Index innerhalb des flachen Arrays</returns>
         protected int GetFlatIndex(int x, int y, int z)
         {
-            return
-                (z * CHUNKSIZE_X * CHUNKSIZE_Y) +
-                (y * CHUNKSIZE_X) +
-                x;
+            return z << 10 | y << 5 | x;
+
+//            return
+//                (z * CHUNKSIZE_X * CHUNKSIZE_Y) +
+//                (y * CHUNKSIZE_X) +
+//                x;
         }
 
         /// <summary>
@@ -154,12 +152,12 @@ namespace OctoAwesome
         /// <param name="manipulator"></param>
         public void Update(GameTime gameTime, IWorldManipulator manipulator)
         {
-            foreach (var index in _updateableBlockIndices.ToArray())
-            {
-                var block = blocks[GetFlatIndex(index)] as IUpdateable;
-                if(block != null)
-                    block.Update(gameTime, manipulator, Planet, _offset + index);
-            }
+//            foreach (var index in _updateableBlockIndices.ToArray())
+//            {
+//                var block = blocks[GetFlatIndex(index)] as IUpdateable;
+//                if(block != null)
+//                    block.Update(gameTime, manipulator, Planet, _offset + index);
+//            }
         }
 
         /// <summary>
