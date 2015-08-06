@@ -165,7 +165,7 @@ namespace OctoAwesome.Runtime
                 return first;
 
             IChunk[] result = _mapGenerator.GenerateChunk(planet, new Index2(index.X, index.Y));
-            if (result != null && result.Length > index.Z)
+            if (result != null && result.Length > index.Z && index.Z >= 0)
             {
                 result[index.Z].ChangeCounter = 0;
                 return result[index.Z];
