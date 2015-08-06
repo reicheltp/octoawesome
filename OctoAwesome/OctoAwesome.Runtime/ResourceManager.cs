@@ -11,10 +11,9 @@ namespace OctoAwesome.Runtime
     {
         public static int CacheSize = 10000;
 
-        private bool disablePersistence = false;
-
-        private IMapGenerator mapGenerator = null;
-        private IChunkPersistence chunkPersistence = null;
+        private readonly bool _disablePersistence = false;
+        private readonly IMapGenerator _mapGenerator = null;
+        private readonly IChunkPersistence _chunkPersistence = null;
 
         public Random Random { get; private set; }
 
@@ -52,21 +51,21 @@ namespace OctoAwesome.Runtime
 
         private ResourceManager()
         {
-            mapGenerator = MapGeneratorManager.GetMapGenerators().First();
-            chunkPersistence = new ChunkDiskPersistence();
+            _mapGenerator = MapGeneratorManager.GetMapGenerators().First();
+            _chunkPersistence = new ChunkDiskPersistence();
 
             Random = new Random();
 
             planetCache = new Cache<int, IPlanet>(1, loadPlanet, savePlanet);
             chunkCache = new Cache<PlanetIndex3, IChunk>(CacheSize, loadChunk, saveChunk);
 
-            bool.TryParse(ConfigurationManager.AppSettings["DisablePersistence"], out disablePersistence); 
+            bool.TryParse(ConfigurationManager.AppSettings["DisablePersistence"], out _disablePersistence); 
         }
 
         public IUniverse GetUniverse(int id)
         {
             if (universeCache == null)
-                universeCache = mapGenerator.GenerateUniverse(id);
+                universeCache = _mapGenerator.GenerateUniverse(id);
 
             return universeCache;
         }
@@ -148,7 +147,7 @@ namespace OctoAwesome.Runtime
         {
             IUniverse universe = GetUniverse(0);
 
-            return mapGenerator.GeneratePlanet(universe.Id, index);
+            return _mapGenerator.GeneratePlanet(universe.Id, index);
         }
 
         private void savePlanet(int index, IPlanet value)
@@ -161,11 +160,11 @@ namespace OctoAwesome.Runtime
             IPlanet planet = GetPlanet(index.Planet);
 
             // Load from disk
-            IChunk first = chunkPersistence.Load(universe.Id, index.Planet, index.ChunkIndex);
+            IChunk first = _chunkPersistence.Load(universe.Id, index.Planet, index.ChunkIndex);
             if (first != null)
                 return first;
 
-            IChunk[] result = mapGenerator.GenerateChunk(planet, new Index2(index.ChunkIndex.X, index.ChunkIndex.Y));
+            IChunk[] result = _mapGenerator.GenerateChunk(planet, new Index2(index.ChunkIndex.X, index.ChunkIndex.Y));
             if (result != null && result.Length > index.ChunkIndex.Z)
             {
                 result[index.ChunkIndex.Z].ChangeCounter = 0;
@@ -179,9 +178,9 @@ namespace OctoAwesome.Runtime
         {
             IUniverse universe = GetUniverse(0);
 
-            if (!disablePersistence && value.ChangeCounter > 0)
+            if (!_disablePersistence && value.ChangeCounter > 0)
             {
-                chunkPersistence.Save(universe.Id, index.Planet, value);
+                _chunkPersistence.Save(universe.Id, index.Planet, value);
                 value.ChangeCounter = 0;
             }
         }

@@ -10,8 +10,7 @@ namespace OctoAwesome.Runtime
     {
         private readonly float Gap = 0.00001f;
 
-        private IPlanet planet;
-        private Cache<Index3, IChunk> localChunkCache;
+        private readonly IPlanet _planet;
 
         private bool lastJump = false;
 
@@ -28,8 +27,8 @@ namespace OctoAwesome.Runtime
         public ActorHost(Player player)
         {
             Player = player;
-            localChunkCache = new Cache<Index3, IChunk>(10, loadChunk, null);
-            planet = ResourceManager.Instance.GetPlanet(Player.Position.Planet);
+
+            _planet = ResourceManager.Instance.GetPlanet(Player.Position.Planet);
 
             ActiveTool = null;
             State = WorldState.Loading;
@@ -44,12 +43,11 @@ namespace OctoAwesome.Runtime
                 {
                     for (int z = -1; z <= 1; z++)
                     {
-                        if (z < 0 || z >= planet.Size.Z)
+                        if (z < 0 || z >= _planet.Size.Z)
                             continue;
 
                         var chunkPosition = Player.Position.ChunkIndex + new Index3(x, y, z);
-                        chunkPosition.NormalizeXY(planet.Size);
-                        localChunkCache.Get(chunkPosition);
+                        chunkPosition.NormalizeXY(_planet.Size);
                     }
                 }
             }
@@ -244,11 +242,6 @@ namespace OctoAwesome.Runtime
 
             #endregion
         }
-        private IChunk loadChunk(Index3 index)
-        {
-            IPlanet planet = ResourceManager.Instance.GetPlanet(Player.Position.Planet);
-            return ResourceManager.Instance.GetChunk(planet.Id, index);
-        }
 
         /// <summary>
         /// Liefert den Block an der angegebenen Block-Koodinate zurück.
@@ -257,24 +250,7 @@ namespace OctoAwesome.Runtime
         /// <returns>Block oder null, falls dort kein Block existiert</returns>
         public IBlock GetBlock(Index3 index)
         {
-            IPlanet planet = ResourceManager.Instance.GetPlanet(Player.Position.Planet);
-
-            index.NormalizeXY(new Index2(
-                planet.Size.X * Chunk.CHUNKSIZE_X,
-                planet.Size.Y * Chunk.CHUNKSIZE_Y));
-            Coordinate coordinate = new Coordinate(0, index, Vector3.Zero);
-
-            // Betroffener Chunk ermitteln
-            Index3 chunkIndex = coordinate.ChunkIndex;
-            if (chunkIndex.X < 0 || chunkIndex.X >= planet.Size.X ||
-                chunkIndex.Y < 0 || chunkIndex.Y >= planet.Size.Y ||
-                chunkIndex.Z < 0 || chunkIndex.Z >= planet.Size.Z)
-                return null;
-            IChunk chunk = localChunkCache.Get(chunkIndex);
-            if (chunk == null)
-                return null;
-
-            return chunk.GetBlock(coordinate.LocalBlockIndex);
+            return ResourceManager.Instance.GetBlock(_planet.Id, index);
         }
 
         /// <summary>
@@ -284,15 +260,7 @@ namespace OctoAwesome.Runtime
         /// <param name="block">Neuer Block oder null, falls der alte Bock gelöscht werden soll.</param>
         public void SetBlock(Index3 index, IBlock block)
         {
-            IPlanet planet = ResourceManager.Instance.GetPlanet(Player.Position.Planet);
-
-            index.NormalizeXYZ(new Index3(
-                planet.Size.X * Chunk.CHUNKSIZE_X,
-                planet.Size.Y * Chunk.CHUNKSIZE_Y,
-                planet.Size.Z * Chunk.CHUNKSIZE_Z));
-            Coordinate coordinate = new Coordinate(0, index, Vector3.Zero);
-            IChunk chunk = localChunkCache.Get(coordinate.ChunkIndex);
-            chunk.SetBlock(coordinate.LocalBlockIndex, block);
+           ResourceManager.Instance.SetBlock(_planet.Id, index, block);
         }
 
         public Coordinate Position
