@@ -6,6 +6,9 @@
 *.user
 *.sln.docstates
 
+# Diagnostic files
+[Dd]iagnostics/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
