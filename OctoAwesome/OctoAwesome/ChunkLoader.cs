@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace OctoAwesome
 {
-    public class 
-        ChunkLoader : IChunkLoader
+    public class ChunkLoader : IChunkLoader
     {
         private Index3 _center;
         private readonly int _range;
@@ -57,32 +56,37 @@ namespace OctoAwesome
                     {
                         if (token.IsCancellationRequested) break;
 
-                        if (i != range && j != range)
+                        if (i != range && j != range && k!= range)
                             continue;
 
 //                _cache.Ensure(new Index3(_center.X + i, _center.Y + j, _center.Z + k));
-                        _cache.Ensure(new Index3(_center.X + i, _center.Y + j, _center.Z + k));
-                        if (token.IsCancellationRequested) break;
-         
-                        _cache.Ensure(new Index3(_center.X + i, _center.Y - j, _center.Z + k));
-                        if (token.IsCancellationRequested) break;
-                        
-                        _cache.Ensure(new Index3(_center.X - i, _center.Y + j, _center.Z + k));
-                        if (token.IsCancellationRequested) break;
-                        
-                        _cache.Ensure(new Index3(_center.X - i, _center.Y - j, _center.Z + k));
-                        if (token.IsCancellationRequested) break;
+                        _cache.Ensure(_center.X + i, _center.Y + j, _center.Z + k);
+                        _cache.Ensure(_center.X + i, _center.Y - j, _center.Z + k);
+                        _cache.Ensure(_center.X - i, _center.Y + j, _center.Z + k);
+                        _cache.Ensure(_center.X - i, _center.Y - j, _center.Z + k);
+                        _cache.Ensure(_center.X + i, _center.Y + j, _center.Z - k);
+                        _cache.Ensure(_center.X + i, _center.Y - j, _center.Z - k);
+                        _cache.Ensure(_center.X - i, _center.Y + j, _center.Z - k);
+                        _cache.Ensure(_center.X - i, _center.Y - j, _center.Z - k);
 
-                        _cache.Ensure(new Index3(_center.X + i, _center.Y + j, _center.Z - k));
-                        if (token.IsCancellationRequested) break;
+                    }
 
-                        _cache.Ensure(new Index3(_center.X + i, _center.Y - j, _center.Z - k));
-                        if (token.IsCancellationRequested) break;
+            for (int i = 0; i <= _range; i++)
+                for (int j = 0; j <= _range; j++)
+                    for (int k = 0; k <= _range; k++)
+                    {
+                        if (i != _range && j != _range && k!=_range)
+                            continue;
 
-                        _cache.Ensure(new Index3(_center.X - i, _center.Y + j, _center.Z - k));
-                        if (token.IsCancellationRequested) break;
-
-                        _cache.Ensure(new Index3(_center.X - i, _center.Y - j, _center.Z - k));
+                        //                _cache.Ensure(new Index3(_center.X + i, _center.Y + j, _center.Z + k));
+                        _cache.Release(_center.X + i, _center.Y + j, _center.Z + k);
+                        _cache.Release(_center.X + i, _center.Y - j, _center.Z + k);
+                        _cache.Release(_center.X - i, _center.Y + j, _center.Z + k);
+                        _cache.Release(_center.X - i, _center.Y - j, _center.Z + k);
+                        _cache.Release(_center.X + i, _center.Y + j, _center.Z - k);
+                        _cache.Release(_center.X + i, _center.Y - j, _center.Z - k);
+                        _cache.Release(_center.X - i, _center.Y + j, _center.Z - k);
+                        _cache.Release(_center.X - i, _center.Y - j, _center.Z - k);
 
                     }
         }
@@ -94,7 +98,7 @@ namespace OctoAwesome
             for (int j = -_range; j < _range; j++)
             for (int k = -_range; k < _range; k++)
             {
-                _cache.Release(new Index3(_center.X + i, _center.Y + j, _center.Z +k));
+                _cache.Release(_center.X + i, _center.Y + j, _center.Z +k);
             }
         }
     }

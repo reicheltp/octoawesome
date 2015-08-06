@@ -15,5 +15,7 @@ namespace OctoAwesome
         void Release(Index3 key);
 
         void Flush();
+        void Ensure(int x, int y, int z);
+        void Release(int x, int y, int z);
     }
 }

@@ -41,7 +41,8 @@ namespace OctoAwesome.Runtime
             var chunkLoader = new ChunkLoader(cache, Index3.Zero, 8);
 
             //Ensure start chunk is loaded!!!
-            cache.Ensure(player.Position.ChunkIndex);
+            var idx = player.Position.ChunkIndex;
+            cache.Ensure(idx);
 
             var host = new ActorHost(player, chunkLoader);
             updateDomains[0].ActorHosts.Add(host);

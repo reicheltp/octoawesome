@@ -6,7 +6,6 @@ namespace OctoAwesome
     public sealed class ChunkCache : IChunkCache
     {
         private readonly IChunk[] _values;
-        private readonly IDictionary<Index3, int> _indices;
 
         private readonly Func<Index3, IChunk> _load;
         private readonly Action<Index3, IChunk> _unload;
@@ -16,8 +15,7 @@ namespace OctoAwesome
             _unload = unload;
             _load = load;
             Size = size;
-            _values = new IChunk[size];
-            _indices = new Dictionary<Index3, int>(size);
+            _values = new IChunk[32768];
         }
 
         public int Size { get; private set; }
@@ -29,11 +27,12 @@ namespace OctoAwesome
 
         public IChunk Get(Index3 key)
         {
-            int index;
-            if(_indices.TryGetValue(key, out index))
-                return Get(index);
+            return _values[Flat(key.X, key.Y, key.Z)];
+        }
 
-            return null;
+        public int Flat(int x, int y, int z)
+        {
+            return (z & 31) << 10 | (y & 31) << 5 | (x & 31);
         }
 
         public IChunk Get(int index)
@@ -43,28 +42,16 @@ namespace OctoAwesome
 
         public void Ensure(Index3 key)
         {
-            if (_indices.ContainsKey(key))
+            var idx = Flat(key.X, key.Y, key.Z);
+            if (_values[idx] != null)
                 return;
 
-            for (int i = 0; i < _values.Length; i++)
-            {
-                if (_values[i] != null)
-                    continue;
-
-                _values[i] = _load(key);
-                _indices[key] = i;
-                break;
-            }
+            _values[idx] = _load(key);
         }
 
         public void Release(Index3 key)
         {
-            int index;
-            if (_indices.TryGetValue(key, out index))
-            {
-                Release(index);
-                _indices.Remove(key);
-            }
+            _values[Flat(key.X, key.Y, key.Z)] = null;
         }
 
         public void Release(int index)
@@ -74,12 +61,25 @@ namespace OctoAwesome
 
         public void Flush()
         {
-            var enumerator = _indices.GetEnumerator();
-            do
+            for (int i = 0; i < _values.Length; i++)
             {
-                var pair = enumerator.Current;
-                _unload(pair.Key, _values[pair.Value]);
-            } while (enumerator.MoveNext());
+                var value = _values[i];
+                if (value != null) _unload(value.Index, value);
+            }
+        }
+
+        public void Ensure(int x, int y, int z)
+        {
+            var idx = Flat(x, y, z);
+            if (_values[idx] != null)
+                return;
+
+            _values[idx] = _load(new Index3(x,y,z));
+        }
+
+        public void Release(int x, int y, int z)
+        {
+            _values[Flat(x, y, z)] = null;
         }
     }
 }
