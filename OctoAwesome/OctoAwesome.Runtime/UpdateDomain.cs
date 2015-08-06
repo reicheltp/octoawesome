@@ -1,11 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
+using Microsoft.Xna.Framework;
 
 namespace OctoAwesome.Runtime
 {
@@ -18,8 +15,6 @@ namespace OctoAwesome.Runtime
 
         public List<ActorHost> ActorHosts { get; private set; }
 
-        public IList<IChunk> ActiveChunks { get; set; } 
-
         public bool Running { get; set; }
 
         public WorldState State { get; private set; }
@@ -28,18 +23,17 @@ namespace OctoAwesome.Runtime
         {
             this.watch = watch;
             ActorHosts = new List<ActorHost>();
-            ActiveChunks = new List<IChunk>();
 
             Running = true;
             State = WorldState.Running;
 
-            thread = new Thread(updateLoop);
+            thread = new Thread(UpdateLoop);
             thread.IsBackground = true;
             thread.Priority = ThreadPriority.BelowNormal;
             thread.Start();
         }
 
-        private void updateLoop()
+        private void UpdateLoop()
         {
             TimeSpan lastCall = new TimeSpan();
             TimeSpan frameTime = new TimeSpan(0, 0, 0, 0, 16);
@@ -48,9 +42,6 @@ namespace OctoAwesome.Runtime
                 GameTime gameTime = new GameTime(
                     watch.Elapsed, frameTime); 
                 lastCall = watch.Elapsed;
-
-                foreach (var activeChunk in ActiveChunks.ToArray())
-                    activeChunk.Update(gameTime, ResourceManager.Instance);
 
                 foreach (var actorHost in ActorHosts)
                     actorHost.Update(gameTime);

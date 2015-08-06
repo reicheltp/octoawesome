@@ -37,12 +37,14 @@ namespace OctoAwesome.Runtime
 
         public ActorHost InjectPlayer(Player player)
         {
-            var host = new ActorHost(player);
-            updateDomains[0].ActorHosts.Add(host);
+            var cache = ResourceManager.Instance.GetCacheForPlanet(player.Position.Planet);
+            var chunkLoader = new ChunkLoader(cache, Index3.Zero, 8);
 
-            // Eine notgedrungene Lösung um an die geladenen Chunks zu kommen.
-            // TODO: Nur die Chunks als aktive einstufen, die in der Nähe des actors sind.
-            updateDomains[0].ActiveChunks = ResourceManager.Instance.ActiveChunks;
+            //Ensure start chunk is loaded!!!
+            cache.Ensure(player.Position.ChunkIndex);
+
+            var host = new ActorHost(player, chunkLoader);
+            updateDomains[0].ActorHosts.Add(host);
 
             return host;
         }

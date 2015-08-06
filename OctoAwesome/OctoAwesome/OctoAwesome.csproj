@@ -55,7 +55,9 @@
     <Compile Include="Block.cs" />
     <Compile Include="Cache.cs" />
     <Compile Include="Chunk.cs" />
+    <Compile Include="ChunkCache.cs" />
     <Compile Include="Coordinate.cs" />
+    <Compile Include="IChunkCache.cs" />
     <Compile Include="IBlock.cs" />
     <Compile Include="IBlockDefinition.cs" />
     <Compile Include="IChunk.cs" />
@@ -67,13 +69,13 @@
     <Compile Include="Index2.cs" />
     <Compile Include="Index3.cs" />
     <Compile Include="IPlanet.cs" />
-    <Compile Include="IPlanetManipulator.cs" />
     <Compile Include="IScreenInputSet.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="IUniverse.cs" />
     <Compile Include="IUpdateable.cs" />
     <Compile Include="IWorldManipulator.cs" />
     <Compile Include="IWorldManipulatorExtensions.cs" />
+    <Compile Include="ChunkLoader.cs" />
     <Compile Include="Noise\INoise.cs" />
     <Compile Include="Noise\PerlinNoiseGenerator.cs" />
     <Compile Include="Noise\SimplexNoiseGenerator.cs" />

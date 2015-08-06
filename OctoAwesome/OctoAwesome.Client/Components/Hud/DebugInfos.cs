@@ -54,7 +54,7 @@ namespace OctoAwesome.Client.Components.Hud
 
             batch.DrawString(ScreenManager.NormalText, "Development Version", new Vector2(5, 5), Color.White);
 
-            string pos = "pos: " + Player.ActorHost.Position.ToString();
+            string pos = "pos: " + Player.ActorHost.Position.ToString() + " C " + Player.ActorHost.Position.ChunkIndex;
             var size = ScreenManager.NormalText.MeasureString(pos);
             batch.DrawString(ScreenManager.NormalText, pos, new Vector2(Size.X - size.X - 5, 5), Color.White);
 

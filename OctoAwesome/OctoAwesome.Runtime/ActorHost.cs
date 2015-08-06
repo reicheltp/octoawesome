@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OctoAwesome.Noise;
 
 namespace OctoAwesome.Runtime
 {
@@ -17,6 +18,8 @@ namespace OctoAwesome.Runtime
         private Index3? lastInteract = null;
         private Index3? lastApply = null;
         private OrientationFlags lastOrientation = OrientationFlags.None;
+        private IChunkLoader _chunkLoader;
+        private Index3 _currentChunk;
 
         public Player Player { get; private set; }
 
@@ -24,8 +27,9 @@ namespace OctoAwesome.Runtime
 
         public WorldState State { get; private set; }
 
-        public ActorHost(Player player)
+        public ActorHost(Player player, IChunkLoader chunkLoader)
         {
+            _chunkLoader = chunkLoader;
             Player = player;
 
             _planet = ResourceManager.Instance.GetPlanet(Player.Position.Planet);
@@ -62,7 +66,7 @@ namespace OctoAwesome.Runtime
             #region Inputverarbeitung
 
             Vector3 externalPower = ((Player.ExternalForce * Player.ExternalForce) / (2 * Player.Mass)) * (float)frameTime.ElapsedGameTime.TotalSeconds;
-	    externalPower *= new Vector3(Math.Sign(Player.ExternalForce.X),Math.Sign(Player.ExternalForce.Y),Math.Sign(Player.ExternalForce.Z));
+        externalPower *= new Vector3(Math.Sign(Player.ExternalForce.X),Math.Sign(Player.ExternalForce.Y),Math.Sign(Player.ExternalForce.Z));
 
             // Input verarbeiten
             Player.Angle += (float)frameTime.ElapsedGameTime.TotalSeconds * Head.X;
@@ -80,7 +84,7 @@ namespace OctoAwesome.Runtime
             Vector3 Friction = new Vector3(1, 1, 0.1f) * Player.FRICTION;
             Vector3 powerdirection = new Vector3();
 
-	    powerdirection += externalPower;
+        powerdirection += externalPower;
             powerdirection += (Player.POWER * VelocityDirection);
             // if (OnGround && input.JumpTrigger)
             if (lastJump)
@@ -204,6 +208,13 @@ namespace OctoAwesome.Runtime
             while (collision && loop < 3);
 
             #endregion
+
+            if (Player.Position.ChunkIndex != _currentChunk)
+            {
+                var diff = Player.Position.ChunkIndex - _currentChunk;
+                _chunkLoader.Update(diff.X, diff.Y, diff.Z);
+                _currentChunk = Player.Position.ChunkIndex;
+            }
 
             #region Block Interaction
 

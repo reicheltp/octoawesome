@@ -4,8 +4,6 @@ namespace OctoAwesome.Runtime
 {
     public interface IResourceManager : IWorldManipulator
     {
-        IList<IChunk> ActiveChunks { get; }
-
         /// <summary>
         /// Liefert den Chunk an der angegebenen Chunk-Koordinate zurück.
         /// </summary>
@@ -18,5 +16,7 @@ namespace OctoAwesome.Runtime
         /// Persistiert den Planeten.
         /// </summary>
         void Save();
+
+        IChunkCache GetCacheForPlanet(int planetId);
     }
 }
